@@ -3,23 +3,30 @@
 <head>
   <meta charset="UTF-8">
   <title>Student Issue Tracker</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="https://www.gstatic.com/firebasejs/10.3.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.3.1/firebase-firestore.js"></script>
-<script src="script.js"></script> <!-- if your JS is in a separate file -->
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    .issue { border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; }
+  </style>
 </head>
 <body>
   <h1>Student Issue Tracker</h1>
+
   <form id="issueForm">
-    <input type="text" id="studentName" placeholder="Your Name" required><br>
-    <input type="text" id="issueTitle" placeholder="Issue Title" required><br>
-    <textarea id="issueDesc" placeholder="Describe your issue" required></textarea><br>
-    <button type="submit">Submit Issue</button>
+    <label>Your Name:</label><br>
+    <input type="text" id="name" required><br><br>
+
+    <label>Issue Title:</label><br>
+    <input type="text" id="title" required><br><br>
+
+    <label>Describe your issue:</label><br>
+    <textarea id="description" required></textarea><br><br>
+
+    <button id="submitBtn" type="button" >Submit Issue</button>
   </form>
 
   <h2>Submitted Issues</h2>
-  <div id="issueList"></div>
+  <div id="issuesList"></div>
 
-  <script src="script.js"></script>
+  <script type="module" src="script.js"></script>
 </body>
 </html>
