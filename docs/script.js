@@ -11,7 +11,7 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
 
-// 🔐 Define your admin email here
+// 🔐 Set your admin email here
 const ADMIN_EMAIL = "rekha@example.com"; // Replace with your actual admin email
 
 window.addEventListener("DOMContentLoaded", () => {
@@ -24,7 +24,7 @@ window.addEventListener("DOMContentLoaded", () => {
   const issuesList = document.getElementById("issuesList");
 
   auth.onAuthStateChanged((user) => {
-    console.log("Auth state changed:", user);
+    console.log("Auth state changed:", user?.email);
     if (user) {
       authSection.classList.add("hidden");
       trackerSection.classList.remove("hidden");
@@ -84,16 +84,17 @@ window.addEventListener("DOMContentLoaded", () => {
   function loadIssues() {
     db.collection("issues").orderBy("timestamp", "desc").onSnapshot((snapshot) => {
       issuesList.innerHTML = "";
+      const currentUserEmail = auth.currentUser?.email;
+      console.log("Current user:", currentUserEmail);
+
       snapshot.forEach((doc) => {
         const issue = doc.data();
         const item = document.createElement("div");
         item.className = "issue";
 
         let adminButtons = "";
-        if (auth.currentUser && auth.currentUser.email === ADMIN_EMAIL) {
-          adminButtons = `
-            <button data-id="${doc.id}" class="deleteBtn">Delete</button>
-          `;
+        if (currentUserEmail === ADMIN_EMAIL) {
+          adminButtons = `<button data-id="${doc.id}" class="deleteBtn">Delete</button>`;
         }
 
         item.innerHTML = `
@@ -107,11 +108,33 @@ window.addEventListener("DOMContentLoaded", () => {
         issuesList.appendChild(item);
       });
 
-      // Resolve button
       document.querySelectorAll(".resolveBtn").forEach((btn) => {
         btn.addEventListener("click", async () => {
           const id = btn.getAttribute("data-id");
           try {
             await db.collection("issues").doc(id).update({ status: "resolved" });
             alert("Issue marked as resolved!");
-          } catch (error)
+          } catch (error) {
+            console.error("Error updating issue:", error);
+            alert("Failed to update issue.");
+          }
+        });
+      });
+
+      document.querySelectorAll(".deleteBtn").forEach((btn) => {
+        btn.addEventListener("click", async () => {
+          const id = btn.getAttribute("data-id");
+          if (confirm("Are you sure you want to delete this issue?")) {
+            try {
+              await db.collection("issues").doc(id).delete();
+              alert("Issue deleted.");
+            } catch (error) {
+              console.error("Error deleting issue:", error);
+              alert("Failed to delete issue.");
+            }
+          }
+        });
+      });
+    });
+  }
+});
