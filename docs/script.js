@@ -1,6 +1,4 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.3.1/firebase-app.js";
-import { getFirestore, collection, addDoc, serverTimestamp, query, onSnapshot } from "https://www.gstatic.com/firebasejs/10.3.1/firebase-firestore.js";
-
+// Initialize Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyAPQTzr0CcR6xGqds2gV-VbopQl4x5Bi0o",
   authDomain: "student-issuetracker.firebaseapp.com",
@@ -10,13 +8,14 @@ const firebaseConfig = {
   appId: "1:440865318009:web:8e553c0271f5e5c36c60a8"
 };
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
 
 window.addEventListener("DOMContentLoaded", () => {
   const submitBtn = document.getElementById("submitBtn");
   const issuesList = document.getElementById("issuesList");
 
+  // Submit issue
   submitBtn.addEventListener("click", async () => {
     const name = document.getElementById("name").value.trim();
     const title = document.getElementById("title").value.trim();
@@ -28,12 +27,12 @@ window.addEventListener("DOMContentLoaded", () => {
     }
 
     try {
-      await addDoc(collection(db, "issues"), {
+      await db.collection("issues").add({
         name,
         title,
         description,
         status: "open",
-        timestamp: serverTimestamp()
+        timestamp: firebase.firestore.FieldValue.serverTimestamp()
       });
       alert("Issue submitted!");
       document.getElementById("issueForm").reset();
@@ -43,14 +42,9 @@ window.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  const q = query(collection(db, "issues"));
-  onSnapshot(q, (snapshot) => {
+  // Load and display issues
+  db.collection("issues").orderBy("timestamp", "desc").onSnapshot((snapshot) => {
     issuesList.innerHTML = "";
-    if (snapshot.empty) {
-      issuesList.innerHTML = "<p>No issues submitted yet.</p>";
-      return;
-    }
-
     snapshot.forEach((doc) => {
       const issue = doc.data();
       const item = document.createElement("div");
@@ -58,9 +52,25 @@ window.addEventListener("DOMContentLoaded", () => {
       item.innerHTML = `
         <h3>${issue.title}</h3>
         <p>${issue.description}</p>
-        <small><strong>Submitted by:</strong> ${issue.name}</small>
+        <small><strong>Submitted by:</strong> ${issue.name}</small><br>
+        <small><strong>Status:</strong> ${issue.status}</small><br>
+        ${issue.status === "open" ? `<button data-id="${doc.id}" class="resolveBtn">Mark as Resolved</button>` : ""}
       `;
       issuesList.appendChild(item);
+    });
+
+    // Add event listeners to resolve buttons
+    document.querySelectorAll(".resolveBtn").forEach((btn) => {
+      btn.addEventListener("click", async () => {
+        const id = btn.getAttribute("data-id");
+        try {
+          await db.collection("issues").doc(id).update({ status: "resolved" });
+          alert("Issue marked as resolved!");
+        } catch (error) {
+          console.error("Error updating issue:", error);
+          alert("Failed to update issue.");
+        }
+      });
     });
   });
 });
