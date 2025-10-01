@@ -12,7 +12,7 @@ const auth = firebase.auth();
 const db = firebase.firestore();
 
 // 🔐 Set your admin email here
-const ADMIN_EMAIL = "rekha@example.com"; // Replace with your actual admin email
+const ADMIN_EMAIL = "rekha.example@gmail.com"; // Replace with your actual admin email
 
 window.addEventListener("DOMContentLoaded", () => {
   const authSection = document.getElementById("authSection");
