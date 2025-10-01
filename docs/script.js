@@ -12,7 +12,7 @@ const auth = firebase.auth();
 const db = firebase.firestore();
 
 // 🔐 Set your admin email here
-const ADMIN_EMAIL = "rekha.example@gmail.com"; // Replace with your actual admin email
+const ADMIN_EMAIL = "rekha.example@gmail.com";
 
 window.addEventListener("DOMContentLoaded", () => {
   const authSection = document.getElementById("authSection");
@@ -38,7 +38,6 @@ window.addEventListener("DOMContentLoaded", () => {
   loginBtn.addEventListener("click", () => {
     const email = document.getElementById("email").value.trim();
     const password = document.getElementById("password").value.trim();
-    console.log("Login clicked:", email);
     auth.signInWithEmailAndPassword(email, password)
       .then(() => alert("Logged in!"))
       .catch((err) => alert(err.message));
@@ -47,7 +46,6 @@ window.addEventListener("DOMContentLoaded", () => {
   signupBtn.addEventListener("click", () => {
     const email = document.getElementById("email").value.trim();
     const password = document.getElementById("password").value.trim();
-    console.log("Signup clicked:", email);
     auth.createUserWithEmailAndPassword(email, password)
       .then(() => alert("Account created!"))
       .catch((err) => alert(err.message));
@@ -87,10 +85,17 @@ window.addEventListener("DOMContentLoaded", () => {
     db.collection("issues").orderBy("timestamp", "desc").onSnapshot((snapshot) => {
       issuesList.innerHTML = "";
       const currentUserEmail = auth.currentUser?.email;
-      console.log("Current user:", currentUserEmail);
+
+      let total = 0;
+      let open = 0;
+      let resolved = 0;
 
       snapshot.forEach((doc) => {
         const issue = doc.data();
+        total++;
+        if (issue.status === "open") open++;
+        if (issue.status === "resolved") resolved++;
+
         const item = document.createElement("div");
         item.className = "issue";
 
@@ -109,6 +114,11 @@ window.addEventListener("DOMContentLoaded", () => {
         `;
         issuesList.appendChild(item);
       });
+
+      // 📊 Update dashboard summary
+      document.getElementById("totalCount").textContent = total;
+      document.getElementById("openCount").textContent = open;
+      document.getElementById("resolvedCount").textContent = resolved;
 
       document.querySelectorAll(".resolveBtn").forEach((btn) => {
         btn.addEventListener("click", async () => {
