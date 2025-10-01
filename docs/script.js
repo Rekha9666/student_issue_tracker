@@ -95,7 +95,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
         total++;
 
-        const status = issue.status?.toLowerCase();
+        const status = issue.status?.toLowerCase() || "unknown";
         if (status === "open") open++;
         else if (status === "resolved") resolved++;
 
@@ -121,6 +121,7 @@ window.addEventListener("DOMContentLoaded", () => {
       document.getElementById("totalCount").textContent = total;
       document.getElementById("openCount").textContent = open;
       document.getElementById("resolvedCount").textContent = resolved;
+      document.getElementById("debugLog").textContent = `Loaded ${total} issues`;
 
       document.querySelectorAll(".resolveBtn").forEach((btn) => {
         btn.addEventListener("click", async () => {
