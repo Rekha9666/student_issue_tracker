@@ -4,22 +4,64 @@
   <meta charset="UTF-8">
   <title>Student Issue Tracker</title>
   <style>
-    body { font-family: Arial, sans-serif; padding: 20px; }
-    .issue { border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; }
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background-color: #f9f9f9;
+    }
+    h1, h2 {
+      color: #333;
+    }
+    form {
+      margin-bottom: 30px;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 8px;
+      margin-top: 4px;
+      margin-bottom: 12px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      padding: 10px 16px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    .issue {
+      background-color: white;
+      border: 1px solid #ddd;
+      padding: 12px;
+      margin-bottom: 12px;
+      border-radius: 4px;
+    }
+    .resolveBtn {
+      margin-top: 8px;
+      background-color: #28a745;
+    }
+    .resolveBtn:hover {
+      background-color: #218838;
+    }
   </style>
 </head>
 <body>
   <h1>Student Issue Tracker</h1>
 
   <form id="issueForm">
-    <label>Your Name:</label><br>
-    <input type="text" id="name" required><br><br>
+    <label for="name">Your Name:</label>
+    <input type="text" id="name" required>
 
-    <label>Issue Title:</label><br>
-    <input type="text" id="title" required><br><br>
+    <label for="title">Issue Title:</label>
+    <input type="text" id="title" required>
 
-    <label>Describe your issue:</label><br>
-    <textarea id="description" required></textarea><br><br>
+    <label for="description">Describe your issue:</label>
+    <textarea id="description" rows="4" required></textarea>
 
     <button id="submitBtn" type="button">Submit Issue</button>
   </form>
@@ -27,6 +69,9 @@
   <h2>Submitted Issues</h2>
   <div id="issuesList"></div>
 
-  <script type="module" src="script.js"></script>
+  <!-- Firebase SDK via compat version -->
+  <script src="https://www.gstatic.com/firebasejs/10.3.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.3.1/firebase-firestore-compat.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
