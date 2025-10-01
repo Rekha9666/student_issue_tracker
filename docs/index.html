@@ -5,23 +5,37 @@
   <title>Student Issue Tracker</title>
   <style>
     body { font-family: Arial; padding: 20px; background: #f9f9f9; }
+    .hidden { display: none; }
     .issue { background: #fff; border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; border-radius: 5px; }
     button { padding: 8px 12px; margin-top: 10px; }
   </style>
 </head>
 <body>
   <h1>Student Issue Tracker</h1>
-  <form id="issueForm">
-    <input type="text" id="name" placeholder="Your Name" required><br><br>
-    <input type="text" id="title" placeholder="Issue Title" required><br><br>
-    <textarea id="description" placeholder="Describe your issue" required></textarea><br><br>
-    <button id="submitBtn" type="button">Submit Issue</button>
-  </form>
-  <h2>Submitted Issues</h2>
-  <div id="issuesList"></div>
 
-  <!-- Firebase SDK -->
+  <div id="authSection">
+    <h2>Login</h2>
+    <input type="email" id="email" placeholder="Email"><br><br>
+    <input type="password" id="password" placeholder="Password"><br><br>
+    <button id="loginBtn">Login</button>
+    <button id="signupBtn">Sign Up</button>
+  </div>
+
+  <div id="trackerSection" class="hidden">
+    <form id="issueForm">
+      <input type="text" id="name" placeholder="Your Name" required><br><br>
+      <input type="text" id="title" placeholder="Issue Title" required><br><br>
+      <textarea id="description" placeholder="Describe your issue" required></textarea><br><br>
+      <button id="submitBtn" type="button">Submit Issue</button>
+    </form>
+
+    <h2>Submitted Issues</h2>
+    <div id="issuesList"></div>
+    <button id="logoutBtn">Logout</button>
+  </div>
+
   <script src="https://www.gstatic.com/firebasejs/10.3.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.3.1/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.3.1/firebase-firestore-compat.js"></script>
   <script src="script.js"></script>
 </body>

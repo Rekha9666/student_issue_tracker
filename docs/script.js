@@ -8,11 +8,48 @@ const firebaseConfig = {
 };
 
 firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
 const db = firebase.firestore();
 
 window.addEventListener("DOMContentLoaded", () => {
+  const authSection = document.getElementById("authSection");
+  const trackerSection = document.getElementById("trackerSection");
+  const loginBtn = document.getElementById("loginBtn");
+  const signupBtn = document.getElementById("signupBtn");
+  const logoutBtn = document.getElementById("logoutBtn");
   const submitBtn = document.getElementById("submitBtn");
   const issuesList = document.getElementById("issuesList");
+
+  auth.onAuthStateChanged((user) => {
+    if (user) {
+      authSection.classList.add("hidden");
+      trackerSection.classList.remove("hidden");
+      loadIssues();
+    } else {
+      authSection.classList.remove("hidden");
+      trackerSection.classList.add("hidden");
+    }
+  });
+
+  loginBtn.addEventListener("click", () => {
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value.trim();
+    auth.signInWithEmailAndPassword(email, password)
+      .then(() => alert("Logged in!"))
+      .catch((err) => alert(err.message));
+  });
+
+  signupBtn.addEventListener("click", () => {
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value.trim();
+    auth.createUserWithEmailAndPassword(email, password)
+      .then(() => alert("Account created!"))
+      .catch((err) => alert(err.message));
+  });
+
+  logoutBtn.addEventListener("click", () => {
+    auth.signOut();
+  });
 
   submitBtn.addEventListener("click", async () => {
     const name = document.getElementById("name").value.trim();
@@ -40,33 +77,35 @@ window.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  db.collection("issues").orderBy("timestamp", "desc").onSnapshot((snapshot) => {
-    issuesList.innerHTML = "";
-    snapshot.forEach((doc) => {
-      const issue = doc.data();
-      const item = document.createElement("div");
-      item.className = "issue";
-      item.innerHTML = `
-        <h3>${issue.title}</h3>
-        <p>${issue.description}</p>
-        <small><strong>Submitted by:</strong> ${issue.name}</small><br>
-        <small><strong>Status:</strong> ${issue.status}</small><br>
-        ${issue.status === "open" ? `<button data-id="${doc.id}" class="resolveBtn">Mark as Resolved</button>` : ""}
-      `;
-      issuesList.appendChild(item);
-    });
+  function loadIssues() {
+    db.collection("issues").orderBy("timestamp", "desc").onSnapshot((snapshot) => {
+      issuesList.innerHTML = "";
+      snapshot.forEach((doc) => {
+        const issue = doc.data();
+        const item = document.createElement("div");
+        item.className = "issue";
+        item.innerHTML = `
+          <h3>${issue.title}</h3>
+          <p>${issue.description}</p>
+          <small><strong>Submitted by:</strong> ${issue.name}</small><br>
+          <small><strong>Status:</strong> ${issue.status}</small><br>
+          ${issue.status === "open" ? `<button data-id="${doc.id}" class="resolveBtn">Mark as Resolved</button>` : ""}
+        `;
+        issuesList.appendChild(item);
+      });
 
-    document.querySelectorAll(".resolveBtn").forEach((btn) => {
-      btn.addEventListener("click", async () => {
-        const id = btn.getAttribute("data-id");
-        try {
-          await db.collection("issues").doc(id).update({ status: "resolved" });
-          alert("Issue marked as resolved!");
-        } catch (error) {
-          console.error("Error updating issue:", error);
-          alert("Failed to update issue.");
-        }
+      document.querySelectorAll(".resolveBtn").forEach((btn) => {
+        btn.addEventListener("click", async () => {
+          const id = btn.getAttribute("data-id");
+          try {
+            await db.collection("issues").doc(id).update({ status: "resolved" });
+            alert("Issue marked as resolved!");
+          } catch (error) {
+            console.error("Error updating issue:", error);
+            alert("Failed to update issue.");
+          }
+        });
       });
     });
-  });
+  }
 });
