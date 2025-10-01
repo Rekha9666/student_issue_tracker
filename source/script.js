@@ -1,8 +1,8 @@
 // Firebase SDKs
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.3.1/firebase-app.js";
-import { getFirestore, collection, addDoc, serverTimestamp, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.3.1/firebase-firestore.js";
+import { getFirestore, collection, addDoc, serverTimestamp, query, onSnapshot } from "https://www.gstatic.com/firebasejs/10.3.1/firebase-firestore.js";
 
-// Your Firebase configuration
+// Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyAPQTzr0CcR6xGqds2gV-VbopQl4x5Bi0o",
   authDomain: "student-issuetracker.firebaseapp.com",
@@ -16,38 +16,40 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// Submit issue to Firestore
-document.getElementById("submitBtn").addEventListener("click", async () => {
-  const name = document.getElementById("name").value.trim();
-  const title = document.getElementById("title").value.trim();
-  const description = document.getElementById("description").value.trim();
-
-  if (!name || !title || !description) {
-    alert("Please fill out all fields.");
-    return;
-  }
-
-  try {
-    await addDoc(collection(db, "issues"), {
-      name,
-      title,
-      description,
-      status: "open",
-      timestamp: serverTimestamp()
-    });
-    alert("Issue submitted!");
-    document.getElementById("issueForm").reset();
-  } catch (error) {
-    console.error("Error submitting issue:", error);
-    alert("Submission failed. Check console for details.");
-  }
-});
-
-// Load and display issues
-function loadIssues() {
+// Wait for DOM to load
+window.addEventListener("DOMContentLoaded", () => {
+  const submitBtn = document.getElementById("submitBtn");
   const issuesList = document.getElementById("issuesList");
-  const q = query(collection(db, "issues"), orderBy("timestamp", "desc"));
 
+  // Submit issue
+  submitBtn.addEventListener("click", async () => {
+    const name = document.getElementById("name").value.trim();
+    const title = document.getElementById("title").value.trim();
+    const description = document.getElementById("description").value.trim();
+
+    if (!name || !title || !description) {
+      alert("Please fill out all fields.");
+      return;
+    }
+
+    try {
+      await addDoc(collection(db, "issues"), {
+        name,
+        title,
+        description,
+        status: "open",
+        timestamp: serverTimestamp()
+      });
+      alert("Issue submitted!");
+      document.getElementById("issueForm").reset();
+    } catch (error) {
+      console.error("Error submitting issue:", error);
+      alert("Submission failed. Check console for details.");
+    }
+  });
+
+  // Load issues
+  const q = query(collection(db, "issues"));
   onSnapshot(q, (snapshot) => {
     issuesList.innerHTML = "";
     if (snapshot.empty) {
@@ -70,6 +72,4 @@ function loadIssues() {
     console.error("Error loading issues:", error);
     issuesList.innerHTML = "<p>Failed to load issues.</p>";
   });
-}
-
-window.onload = loadIssues;
+});
