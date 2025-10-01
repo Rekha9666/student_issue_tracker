@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Dashboard</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    .issue { border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; }
+    .resolved { background-color: #e0ffe0; }
+  </style>
+</head>
+<body>
+  <h1>Admin Dashboard</h1>
+  <button onclick="signOut()">Sign Out</button>
+  <h2>Submitted Issues</h2>
+  <select id="statusFilter" onchange="loadIssues()">
+    <option value="all">All</option>
+    <option value="open">Open</option>
+    <option value="in progress">In Progress</option>
+    <option value="resolved">Resolved</option>
+  </select>
+  <div id="issuesList"></div>
+
+  
+  <script type="module">
+  import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js";
+
+  const auth = getAuth();
+  signInWithEmailAndPassword(auth, "admin@example.com", "yourPassword")
+    .then(() => {
+      console.log("Admin signed in");
+    })
+    .catch((error) => {
+      alert("Login failed: " + error.message);
+    });
+</script>
+
+  <!-- Firebase SDKs -->
+  <script type="module" src="admin.js"></script>
+</body>
+</html>
