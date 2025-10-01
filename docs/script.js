@@ -1,4 +1,3 @@
-// Initialize Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyAPQTzr0CcR6xGqds2gV-VbopQl4x5Bi0o",
   authDomain: "student-issuetracker.firebaseapp.com",
@@ -15,7 +14,6 @@ window.addEventListener("DOMContentLoaded", () => {
   const submitBtn = document.getElementById("submitBtn");
   const issuesList = document.getElementById("issuesList");
 
-  // Submit issue
   submitBtn.addEventListener("click", async () => {
     const name = document.getElementById("name").value.trim();
     const title = document.getElementById("title").value.trim();
@@ -38,11 +36,10 @@ window.addEventListener("DOMContentLoaded", () => {
       document.getElementById("issueForm").reset();
     } catch (error) {
       console.error("Error submitting issue:", error);
-      alert("Submission failed. Check console for details.");
+      alert("Submission failed.");
     }
   });
 
-  // Load and display issues
   db.collection("issues").orderBy("timestamp", "desc").onSnapshot((snapshot) => {
     issuesList.innerHTML = "";
     snapshot.forEach((doc) => {
@@ -59,7 +56,6 @@ window.addEventListener("DOMContentLoaded", () => {
       issuesList.appendChild(item);
     });
 
-    // Add event listeners to resolve buttons
     document.querySelectorAll(".resolveBtn").forEach((btn) => {
       btn.addEventListener("click", async () => {
         const id = btn.getAttribute("data-id");
