@@ -11,7 +11,6 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
 
-// 🔐 Set your admin email here
 const ADMIN_EMAIL = "rekha.example@gmail.com";
 
 window.addEventListener("DOMContentLoaded", () => {
@@ -92,9 +91,13 @@ window.addEventListener("DOMContentLoaded", () => {
 
       snapshot.forEach((doc) => {
         const issue = doc.data();
+        console.log("Issue loaded:", issue);
+
         total++;
-        if (issue.status === "open") open++;
-        if (issue.status === "resolved") resolved++;
+
+        const status = issue.status?.toLowerCase();
+        if (status === "open") open++;
+        else if (status === "resolved") resolved++;
 
         const item = document.createElement("div");
         item.className = "issue";
@@ -109,13 +112,12 @@ window.addEventListener("DOMContentLoaded", () => {
           <p>${issue.description}</p>
           <small><strong>Submitted by:</strong> ${issue.name}</small><br>
           <small><strong>Status:</strong> ${issue.status}</small><br>
-          ${issue.status === "open" ? `<button data-id="${doc.id}" class="resolveBtn">Mark as Resolved</button>` : ""}
+          ${status === "open" ? `<button data-id="${doc.id}" class="resolveBtn">Mark as Resolved</button>` : ""}
           ${adminButtons}
         `;
         issuesList.appendChild(item);
       });
 
-      // 📊 Update dashboard summary
       document.getElementById("totalCount").textContent = total;
       document.getElementById("openCount").textContent = open;
       document.getElementById("resolvedCount").textContent = resolved;
