@@ -21,6 +21,7 @@ window.addEventListener("DOMContentLoaded", () => {
   const issuesList = document.getElementById("issuesList");
 
   auth.onAuthStateChanged((user) => {
+    console.log("Auth state changed:", user);
     if (user) {
       authSection.classList.add("hidden");
       trackerSection.classList.remove("hidden");

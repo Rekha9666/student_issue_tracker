@@ -13,14 +13,16 @@
 <body>
   <h1>Student Issue Tracker</h1>
 
+  <!-- 🔐 Authentication Section -->
   <div id="authSection">
-    <h2>Login</h2>
+    <h2>Login or Sign Up</h2>
     <input type="email" id="email" placeholder="Email"><br><br>
     <input type="password" id="password" placeholder="Password"><br><br>
     <button id="loginBtn">Login</button>
     <button id="signupBtn">Sign Up</button>
   </div>
 
+  <!-- 📝 Issue Tracker Section -->
   <div id="trackerSection" class="hidden">
     <form id="issueForm">
       <input type="text" id="name" placeholder="Your Name" required><br><br>
@@ -34,6 +36,7 @@
     <button id="logoutBtn">Logout</button>
   </div>
 
+  <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/10.3.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.3.1/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.3.1/firebase-firestore-compat.js"></script>
