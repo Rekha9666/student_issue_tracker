@@ -38,6 +38,7 @@ window.addEventListener("DOMContentLoaded", () => {
   loginBtn.addEventListener("click", () => {
     const email = document.getElementById("email").value.trim();
     const password = document.getElementById("password").value.trim();
+    console.log("Login clicked:", email);
     auth.signInWithEmailAndPassword(email, password)
       .then(() => alert("Logged in!"))
       .catch((err) => alert(err.message));
@@ -46,6 +47,7 @@ window.addEventListener("DOMContentLoaded", () => {
   signupBtn.addEventListener("click", () => {
     const email = document.getElementById("email").value.trim();
     const password = document.getElementById("password").value.trim();
+    console.log("Signup clicked:", email);
     auth.createUserWithEmailAndPassword(email, password)
       .then(() => alert("Account created!"))
       .catch((err) => alert(err.message));
