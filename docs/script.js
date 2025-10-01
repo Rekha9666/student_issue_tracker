@@ -1,8 +1,6 @@
-// Firebase SDKs
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.3.1/firebase-app.js";
 import { getFirestore, collection, addDoc, serverTimestamp, query, onSnapshot } from "https://www.gstatic.com/firebasejs/10.3.1/firebase-firestore.js";
 
-// Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyAPQTzr0CcR6xGqds2gV-VbopQl4x5Bi0o",
   authDomain: "student-issuetracker.firebaseapp.com",
@@ -12,16 +10,13 @@ const firebaseConfig = {
   appId: "1:440865318009:web:8e553c0271f5e5c36c60a8"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// Wait for DOM to load
 window.addEventListener("DOMContentLoaded", () => {
   const submitBtn = document.getElementById("submitBtn");
   const issuesList = document.getElementById("issuesList");
 
-  // Submit issue
   submitBtn.addEventListener("click", async () => {
     const name = document.getElementById("name").value.trim();
     const title = document.getElementById("title").value.trim();
@@ -48,7 +43,6 @@ window.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Load issues
   const q = query(collection(db, "issues"));
   onSnapshot(q, (snapshot) => {
     issuesList.innerHTML = "";
@@ -68,8 +62,5 @@ window.addEventListener("DOMContentLoaded", () => {
       `;
       issuesList.appendChild(item);
     });
-  }, (error) => {
-    console.error("Error loading issues:", error);
-    issuesList.innerHTML = "<p>Failed to load issues.</p>";
   });
 });
