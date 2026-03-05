@@ -1,3 +1,5 @@
+import { getDoc } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
+
 // Load Issues (only mentors should see)
 async function loadIssues() {
   if (!auth.currentUser) return;
@@ -6,8 +8,8 @@ async function loadIssues() {
   const userDoc = await getDoc(doc(db, "users", auth.currentUser.uid));
   const userData = userDoc.data();
 
-  if (userData.role !== "mentor") {
-    // If not a mentor, don't show issues
+  if (!userData || userData.role !== "mentor") {
+    // If not a mentor, show a message instead of issues
     document.getElementById("issuesList").innerHTML = 
       "You do not have permission to view submitted issues.";
     return;
