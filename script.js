@@ -1,33 +1,22 @@
-import { getDoc } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
+import { doc, setDoc } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
 
-// Load Issues (only mentors should see)
-async function loadIssues() {
-  if (!auth.currentUser) return;
+document.getElementById("signupBtn").addEventListener("click", () => {
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
 
-  // Get the user's role from Firestore
-  const userDoc = await getDoc(doc(db, "users", auth.currentUser.uid));
-  const userData = userDoc.data();
+  createUserWithEmailAndPassword(auth, email, password)
+    .then(async (userCredential) => {
+      const user = userCredential.user;
 
-  if (!userData || userData.role !== "mentor") {
-    // If not a mentor, show a message instead of issues
-    document.getElementById("issuesList").innerHTML = 
-      "You do not have permission to view submitted issues.";
-    return;
-  }
+      // Save role in Firestore (default student)
+      await setDoc(doc(db, "users", user.uid), {
+        email: user.email,
+        role: "student"   // later change to "mentor" in Console
+      });
 
-  // If mentor, load issues
-  const issuesList = document.getElementById("issuesList");
-  issuesList.innerHTML = "";
-
-  try {
-    const querySnapshot = await getDocs(collection(db, "issues"));
-    querySnapshot.forEach(docSnap => {
-      const issue = docSnap.data();
-      const div = document.createElement("div");
-      div.textContent = `${issue.title} - ${issue.description} (Submitted by: ${issue.createdBy})`;
-      issuesList.appendChild(div);
+      alert("Account created for: " + user.email);
+    })
+    .catch(error => {
+      alert("Signup failed: " + error.message);
     });
-  } catch (e) {
-    console.error("Error loading issues: ", e);
-  }
-}
+});
