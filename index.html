@@ -1,17 +1,26 @@
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
-  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } 
-    from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Student Issue Tracker</title>
+</head>
+<body>
+  <h1>Student Issue Tracker</h1>
 
-  const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "student-issue-tracker-2.firebaseapp.com",
-    projectId: "student-issue-tracker-2",
-    storageBucket: "student-issue-tracker-2.appspot.com",
-    messagingSenderId: "YOUR_SENDER_ID",
-    appId: "YOUR_APP_ID"
-  };
+  <!-- Login / Signup Form -->
+  <input id="email" type="email" placeholder="Email">
+  <input id="password" type="password" placeholder="Password">
+  <button id="loginBtn">Login</button>
+  <button id="signupBtn">Sign Up</button>
 
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-</script>
+  <!-- Issue Form -->
+  <input id="issueTitle" type="text" placeholder="Issue Title">
+  <textarea id="issueDesc" placeholder="Issue Description"></textarea>
+  <button id="submitIssueBtn">Submit Issue</button>
+
+  <!-- Display Issues -->
+  <div id="issuesList"></div>
+
+  <!-- Link to JS -->
+  <script type="module" src="script.js"></script>
+</body>
+</html>
